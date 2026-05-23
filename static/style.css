@@ -1,0 +1,217 @@
+:root {
+  --ink: #171512;
+  --paper: #fff4df;
+  --paper-2: #f8df9b;
+  --muted: #685d4e;
+  --red: #df3f34;
+  --blue: #45b9d2;
+  --green: #abc941;
+  --black: #101010;
+  --shadow: rgba(0, 0, 0, 0.35);
+  --prize-height: 92px;
+  --prize-gap: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(69, 185, 210, 0.24), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(223, 63, 52, 0.18), transparent 25%),
+    linear-gradient(145deg, #151516 0%, #23201b 58%, #151516 100%);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+main {
+  width: min(620px, 100%);
+}
+
+.stage {
+  min-height: min(760px, calc(100vh - 56px));
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 18px;
+  overflow: hidden;
+  border: 6px solid var(--black);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.08), transparent 22%, transparent 78%, rgba(0,0,0,0.16)),
+    repeating-linear-gradient(90deg, #c9342b 0 58px, #f5d98a 58px 116px);
+  box-shadow: 0 28px 70px var(--shadow);
+}
+
+.machine {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 34px 28px 0;
+}
+
+.slot-frame {
+  position: relative;
+  width: min(530px, 100%);
+  height: min(540px, 68vh);
+  min-height: 500px;
+  border: 12px solid #121212;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1a1816;
+  box-shadow:
+    inset 0 0 0 8px rgba(255,255,255,0.08),
+    0 18px 36px rgba(0,0,0,0.28);
+}
+
+.slot-frame::before,
+.slot-frame::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: 92px;
+  pointer-events: none;
+}
+
+.slot-frame::before {
+  top: 0;
+  background: linear-gradient(#111 0%, rgba(17,17,17,0.82) 24%, transparent 100%);
+}
+
+.slot-frame::after {
+  bottom: 0;
+  background: linear-gradient(transparent 0%, rgba(17,17,17,0.82) 76%, #111 100%);
+}
+
+.winner-line {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 50%;
+  z-index: 5;
+  height: var(--prize-height);
+  border: 4px solid #fff1c5;
+  border-radius: 8px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  box-shadow:
+    0 0 0 4px rgba(0,0,0,0.24),
+    inset 0 0 24px rgba(255, 255, 255, 0.12);
+}
+
+.reel {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 0;
+  display: grid;
+  gap: var(--prize-gap);
+  padding: 18px 0;
+  transform: translateY(-4px);
+  will-change: transform;
+}
+
+.reel.spinning {
+  transition: transform 4.5s cubic-bezier(.08,.78,.12,1);
+}
+
+.prize {
+  height: var(--prize-height);
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 4px solid #101010;
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.3);
+  font-weight: 950;
+  line-height: 1.04;
+}
+
+.prize:nth-child(3n) {
+  background: #dff1f4;
+}
+
+.prize:nth-child(4n) {
+  background: #f8dbd6;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 3px solid #101010;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 32px;
+  box-shadow: 3px 3px 0 #101010;
+}
+
+.text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: clamp(20px, 4.8vw, 30px);
+}
+
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  width: calc(100% - 56px);
+  margin: 0 28px 28px;
+  min-height: 74px;
+  border: 4px solid #111;
+  border-radius: 8px;
+  background: var(--red);
+  color: #fff8e8;
+  cursor: pointer;
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 950;
+  letter-spacing: 0;
+  box-shadow: 0 10px 0 #111;
+  transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+}
+
+button:hover {
+  filter: brightness(1.04) saturate(1.08);
+}
+
+button:active {
+  transform: translateY(8px);
+  box-shadow: 0 2px 0 #111;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.78;
+  background: var(--red);
+  color: #fff8e8;
+}
+
+@media (max-width: 880px) {
+  body {
+    padding: 12px;
+  }
+
+  .stage {
+    min-height: calc(100vh - 24px);
+  }
+
+  .slot-frame {
+    height: min(540px, 70vh);
+    min-height: 500px;
+  }
+}

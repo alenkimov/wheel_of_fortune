@@ -5,23 +5,27 @@ const spin = document.querySelector("#spin");
 const soda = { text: "Газировка", icon: "🥤", safe: true };
 const scary = [
   { text: "Ампутация конечности", icon: "🪚" },
-  { text: "Казнь", icon: "⚰️" },
-  { text: "Расчленение", icon: "✂️" },
+  { text: "Славная смерть", icon: "⚰️" },
+  { text: "Болезненное расчленение", icon: "✂️" },
   { text: "Смерть в нищете", icon: "🧾" },
   { text: "Поездка в Европу", icon: "⚔️" },
   { text: "Блокировка карты 161 ФЗ", icon: "💳" },
   { text: "Болезнь Бенджамина Баттона", icon: "👴" },
   { text: "Некроз ног", icon: "🦵" },
   { text: "Повреждение ДНК", icon: "🧬" },
+  { text: "Пролапс", icon: "🫠" },
+  { text: "Неснимаемые трусы", icon: "🩲" },
+  { text: "Врачи не могут обнаружить вашу паховую грыжу", icon: "🏥" },
 ];
 
 let spins = 0;
 
 function prizeMarkup(item) {
+  const longTextClass = item.text.length > 28 ? " text-long" : "";
   return `
     <div class="prize">
       <span class="icon">${item.icon}</span>
-      <span class="text">${item.text}</span>
+      <span class="text${longTextClass}">${item.text}</span>
     </div>
   `;
 }

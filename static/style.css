@@ -167,6 +167,11 @@ main {
   font-size: clamp(20px, 4.8vw, 30px);
 }
 
+.text-long {
+  font-size: clamp(15px, 3.2vw, 22px);
+  line-height: 1.05;
+}
+
 button {
   appearance: none;
   -webkit-appearance: none;

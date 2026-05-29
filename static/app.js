@@ -2,6 +2,8 @@ const reel = document.querySelector("#reel");
 const frame = document.querySelector("#frame");
 const spin = document.querySelector("#spin");
 
+const revolver = { text: "Игрушечный револьвер", icon: "💥", once: true };
+
 const soda = { text: "Газировка", icon: "🥤", safe: true };
 const scary = [
   { text: "Ампутация конечности", icon: "🪚" },
@@ -19,7 +21,12 @@ const scary = [
   { text: "Врачи не могут обнаружить вашу паховую грыжу", icon: "🏥" },
 ];
 
-let spins = 0;
+const spinCountKey = "wheelOfFortuneSpinCount";
+const revolverWonKey = "wheelOfFortuneRevolverWon";
+
+const savedSpins = Number.parseInt(localStorage.getItem(spinCountKey) || "0", 10);
+let spins = Number.isNaN(savedSpins) ? 0 : savedSpins;
+let revolverWon = localStorage.getItem(revolverWonKey) === "true";
 
 function prizeMarkup(item) {
   const longTextClass = item.text.length > 28 ? " text-long" : "";
@@ -39,6 +46,10 @@ function randomChoice(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
+function visiblePrizePool() {
+  return revolverWon ? scary : [...scary, revolver];
+}
+
 function shuffle(items) {
   const result = [...items];
   for (let i = result.length - 1; i > 0; i -= 1) {
@@ -48,21 +59,17 @@ function shuffle(items) {
   return result;
 }
 
-function buildSpinStrip() {
-  const opening = sodaStrip(6);
-  const dangerPool = shuffle([
-    ...scary,
-    ...scary,
-    soda,
-    soda,
-    randomChoice(scary),
-    randomChoice(scary),
-  ]);
-  const noise = Array.from({ length: 10 }, () => Math.random() > 0.34 ? randomChoice(scary) : soda);
-  const beforeWinner = shuffle([scary[0], scary[1], scary[2], randomChoice(scary), randomChoice(scary)]);
+function buildSpinStrip(winner = soda) {
+  const prizePool = visiblePrizePool();
+  const opening = sodaStrip(5);
+  const dangerPool = shuffle(
+    Array.from({ length: 8 }, () => Math.random() > 0.2 ? randomChoice(prizePool) : soda),
+  );
+  const noise = Array.from({ length: 4 }, () => Math.random() > 0.34 ? randomChoice(prizePool) : soda);
+  const beforeWinner = shuffle([randomChoice(prizePool), randomChoice(prizePool), soda]);
   const finalIndex = opening.length + dangerPool.length + noise.length + beforeWinner.length;
-  const afterWinner = shuffle([randomChoice(scary), randomChoice(scary), scary[3], soda]);
-  const items = [...opening, ...dangerPool, ...noise, ...beforeWinner, soda, ...afterWinner];
+  const afterWinner = shuffle([randomChoice(prizePool), randomChoice(prizePool), soda]);
+  const items = [...opening, ...dangerPool, ...noise, ...beforeWinner, winner, ...afterWinner];
   return { items, finalIndex };
 }
 
@@ -100,9 +107,16 @@ showCalm();
 spin.addEventListener("click", () => {
   spin.disabled = true;
   spins += 1;
+  localStorage.setItem(spinCountKey, String(spins));
   frame.classList.add("spinning");
 
-  const { items, finalIndex } = buildSpinStrip();
+  const winner = spins === 69 && !revolverWon ? revolver : soda;
+  const { items, finalIndex } = buildSpinStrip(winner);
+
+  if (winner.once) {
+    revolverWon = true;
+    localStorage.setItem(revolverWonKey, "true");
+  }
 
   renderReel(items);
   setReelPosition(2);
@@ -117,5 +131,5 @@ spin.addEventListener("click", () => {
   window.setTimeout(() => {
     frame.classList.remove("spinning");
     spin.disabled = false;
-  }, 4700);
+  }, 7200);
 });
